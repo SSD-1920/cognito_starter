@@ -12,6 +12,9 @@ export default class Navbar extends Component {
           </div>
           <div className="navbar-end">
             <div className="navbar-item">
+              {this.props.auth.isAuth && this.props.auth.user && (
+                <p>Hello {this.props.auth.user.username}</p>
+              )}
               <div className="auth-buttons">
                 <a href="/register" className="button is-primary">
                   <strong>Register</strong>
