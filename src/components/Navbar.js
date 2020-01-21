@@ -4,8 +4,6 @@ import { Auth } from 'aws-amplify';
 export default class Navbar extends Component {
   //handle the logout button click event
   logOutHandler = async event => {
-    //prevent page refresh
-    event.preventDefault();
     //amplify signOut
     try {
       Auth.signOut();
@@ -45,7 +43,7 @@ export default class Navbar extends Component {
                 <a href="/changepassword" className="button is-warning is-light">
                 Change password
               </a>
-                  <a href="/" onClick={this.logOutHandler} className="button is-light">
+                  <a href="/login" onClick={this.logOutHandler} className="button is-light">
                     Log out
                   </a>
                   </div>
