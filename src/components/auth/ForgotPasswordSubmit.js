@@ -7,9 +7,11 @@ class ForgotPasswordSubmit extends Component {
   state = {
     verificationcode: "",
     email: "",
-    newpassword: "",
+    password: "",
+    confirmpassword: "",
     errors: {
       blankfield: false,
+      matchedpassword: false,
       cognito: null
     }
   };
@@ -34,25 +36,26 @@ class ForgotPasswordSubmit extends Component {
       this.setState({
         errors: { ...this.state.errors, ...error }
       });
-    }
-    //Integrate Cognito here on valid form submission
-    try {
-        await Auth.forgotPasswordSubmit(
-            this.state.email,
-            this.state.verificationcode,
-            this.state.newpassword
-        );
-        this.props.history.push("/changepasswordconfirmation");
-    } catch (error){
-      let err = null;
-      !error.message ? err= {"message": error } : err = error;
+    } else {
+      //Integrate Cognito here on valid form submission
+      try {
+          await Auth.forgotPasswordSubmit(
+              this.state.email,
+              this.state.verificationcode,
+              this.state.password
+          );
+          this.props.history.push("/changepasswordconfirmation");
+      } catch (error){
+        let err = null;
+        !error.message ? err= {"message": error } : err = error;
 
-      this.setState({
-        errors: {
-          ...this.state.errors,
-          cognito: err
-        }
-      });
+        this.setState({
+          errors: {
+            ...this.state.errors,
+            cognito: err
+          }
+        });
+      }
     }
   };
 
@@ -106,9 +109,24 @@ class ForgotPasswordSubmit extends Component {
                 <input 
                   className="input" 
                   type="password"
-                  id="newpassword"
-                  placeholder="New Password"
+                  id="password"
+                  placeholder="New password"
                   value={this.state.newpassword}
+                  onChange={this.onInputChange}
+                />
+                <span className="icon is-small is-left">
+                  <i className="fas fa-lock"></i>
+                </span>
+              </p>
+            </div>
+            <div className="field">
+              <p className="control has-icons-left">
+                <input 
+                  className="input" 
+                  type="password"
+                  id="confirmpassword"
+                  placeholder="Confirm new password"
+                  value={this.state.confirmpassword}
                   onChange={this.onInputChange}
                 />
                 <span className="icon is-small is-left">

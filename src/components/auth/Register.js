@@ -38,35 +38,36 @@ class Register extends Component {
       this.setState({
         errors: { ...this.state.errors, ...error }
       });
-    }
-    //Integrate Cognito here on valid form submission
-    
-    //Take the state variables to pass to the signUp method
-    //we added email as a required field and this needs to be
-    //passed to the api as an attribute.
-    const { username, email, password } = this.state;
-    try {
-      const signUpResponse = await Auth.signUp({
-        username,
-        password,
-        attributes: {
-          email: email
-        }
-      });
-      console.log(signUpResponse);
-      //redirect to Welcome page if registration is successful
-      this.props.history.push("/welcome");
-    } catch (error){
-      //check if error has a message property, if not add one.
-      let err = null;
-      !error.message ? err= {"message": error } : err = error;
-      //set form error as a cognito error
-      this.setState({
-        errors: {
-          ...this.state.errors,
-          cognito: err
-        }
-      });
+    } else {
+      //Integrate Cognito here on valid form submission
+      
+      //Take the state variables to pass to the signUp method
+      //we added email as a required field and this needs to be
+      //passed to the api as an attribute.
+      const { username, email, password } = this.state;
+      try {
+        const signUpResponse = await Auth.signUp({
+          username,
+          password,
+          attributes: {
+            email: email
+          }
+        });
+        console.log(signUpResponse);
+        //redirect to Welcome page if registration is successful
+        this.props.history.push("/welcome");
+      } catch (error){
+        //check if error has a message property, if not add one.
+        let err = null;
+        !error.message ? err= {"message": error } : err = error;
+        //set form error as a cognito error
+        this.setState({
+          errors: {
+            ...this.state.errors,
+            cognito: err
+          }
+        });
+      }
     }
   };
 

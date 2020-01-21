@@ -3,11 +3,14 @@ import FormErrors from "../FormErrors";
 import Validate from "../util/Validation";
 import {Auth} from 'aws-amplify';
 
-class ForgotPassword extends Component {
+class ChangePassword extends Component {
   state = {
-    email: "",
+    oldpassword: "",
+    password: "",
+    confirmpassword: "",
     errors: {
       blankfield: false,
+      matchedpassword: false,
       cognito: null
     }
   };
@@ -16,6 +19,7 @@ class ForgotPassword extends Component {
     this.setState({
       errors: {
         blankfield: false,
+        matchedpassword: false,
         cognito: null
       }
     });
@@ -35,8 +39,12 @@ class ForgotPassword extends Component {
     } else {
       //Integrate Cognito here on valid form submission
       try {
-        await Auth.forgotPassword(this.state.email);
-        this.props.history.push("/forgotpasswordsubmit");
+        await Auth.changePassword(
+          this.props.auth.user,
+          this.state.oldpassword,
+          this.state.password
+          );
+        this.props.history.push("/changepasswordconfirmation");
       } catch (error){
         let err = null;
         !error.message ? err= {"message": error } : err = error;
@@ -62,8 +70,7 @@ class ForgotPassword extends Component {
     return (
       <section className="section auth">
         <div className="container">
-          <h1>Forgot Password?</h1>
-          <p>Please enter your email to recieve a password reset code.</p>
+          <h1>Change Password</h1>
           <FormErrors formerrors={this.state.errors} />
 
           <form onSubmit={this.handleSubmit}>
@@ -71,21 +78,56 @@ class ForgotPassword extends Component {
               <p className="control has-icons-left">
                 <input 
                   className="input" 
-                  type="email"
-                  id="email"
-                  placeholder="Enter email"
-                  value={this.state.email}
+                  type="password"
+                  id="oldpassword"
+                  placeholder="Old password"
+                  value={this.state.oldpassword}
                   onChange={this.onInputChange}
                 />
                 <span className="icon is-small is-left">
-                  <i className="fas fa-envelope"></i>
+                  <i className="fas fa-lock"></i>
+                </span>
+              </p>
+            </div>
+            <div className="field">
+              <p className="control has-icons-left">
+                <input 
+                  className="input" 
+                  type="password"
+                  id="password"
+                  placeholder="New password"
+                  value={this.state.password}
+                  onChange={this.onInputChange}
+                />
+                <span className="icon is-small is-left">
+                  <i className="fas fa-lock"></i>
+                </span>
+              </p>
+            </div>
+            <div className="field">
+              <p className="control has-icons-left">
+                <input 
+                  className="input" 
+                  type="password"
+                  id="confirmpassword"
+                  placeholder="Confirm new password"
+                  value={this.state.confirmpassword}
+                  onChange={this.onInputChange}
+                />
+                <span className="icon is-small is-left">
+                  <i className="fas fa-lock"></i>
                 </span>
               </p>
             </div>
             <div className="field">
               <p className="control">
+                <a href="/forgotpassword">Forgot password?</a>
+              </p>
+            </div>
+            <div className="field">
+              <p className="control">
                 <button className="button is-success">
-                  Email Reset Code
+                  Change Password
                 </button>
               </p>
             </div>
@@ -96,4 +138,4 @@ class ForgotPassword extends Component {
   }
 }
 
-export default ForgotPassword;
+export default ChangePassword;

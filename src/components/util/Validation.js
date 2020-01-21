@@ -23,6 +23,10 @@ function validateForm(event, state) {
       document.getElementById("confirmpassword").classList.add("is-danger");
       return { blankfield: true };
     }
+    if (state.hasOwnProperty("oldpassword") && state.oldpassword === "") {
+      document.getElementById("oldpassword").classList.add("is-danger");
+      return { blankfield: true };
+    }
     if (
       state.hasOwnProperty("password") &&
       state.hasOwnProperty("confirmpassword") &&
@@ -31,6 +35,10 @@ function validateForm(event, state) {
       document.getElementById("password").classList.add("is-danger");
       document.getElementById("confirmpassword").classList.add("is-danger");
       return { matchedpassword: true, blankfield: false };
+    }
+    if (state.hasOwnProperty("verificationcode") && state.verificationcode === "") {
+      document.getElementById("verificationcode").classList.add("is-danger");
+      return { blankfield: true };
     }
     return;
   }
